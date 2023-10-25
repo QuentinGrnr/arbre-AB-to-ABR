@@ -126,8 +126,17 @@ void AB::Infixe(noeud* x)
 /****************************************/
 int AB::N(noeud* x)
 {
-    // !!! A FAIRE !!! //
-	return(0);
+	int res, resfg, resfd;
+
+	res = resfg = resfd = 0;
+
+	if(x){
+		resfg = N(x->fg);
+		resfd = N(x->fd);
+		res = resfg + resfd + 1;
+	}
+	this->n = res;
+	return(res);
 }
 
 
@@ -158,10 +167,20 @@ int AB::Hauteur(noeud* x)
 /* Objectif : Stocker dans T les valeurs 
 /* de l'arbre triées en ordre croissant
 /****************************************/
-void AB::Tri()
-{
-    // !!! A FAIRE !!! //
+void AB::Tri(){
+	this->N(this->r);
+	parcoursTableau(this->r);
 }
+
+void AB::parcoursTableau(noeud* x, int i){
+	if (x == nullptr){
+		return;
+	}
+	Infixe(x->fg);
+	cout << " " << x->cle;
+	Infixe(x->fd);
+}
+
 
 /****************************************/
 /* Objectif : Transformation d'un arbre binaire de racine x
