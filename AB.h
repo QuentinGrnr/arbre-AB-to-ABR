@@ -42,5 +42,6 @@ class AB{
 	void Tri();
 	void ABtoABR(noeud* x);
 
-	void parcoursTableau(noeud* x, int i =0);
+    void add_val_infixe(noeud *x, int i=0);
+    int min_val_arbre(noeud* x,int min_nbr);
 };

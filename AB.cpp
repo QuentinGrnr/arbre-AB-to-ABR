@@ -135,7 +135,6 @@ int AB::N(noeud* x)
 		resfd = N(x->fd);
 		res = resfg + resfd + 1;
 	}
-	this->n = res;
 	return(res);
 }
 
@@ -168,17 +167,38 @@ int AB::Hauteur(noeud* x)
 /* de l'arbre triées en ordre croissant
 /****************************************/
 void AB::Tri(){
-	this->N(this->r);
-	parcoursTableau(this->r);
+	this->n = this->N(this->r);
+	for (int i = 0; i < this->n; i++){
+		int min_nbr = -1;
+		min_nbr = min_val_arbre(this->r, min_nbr);
+		this->T[i] = min_nbr;	}
 }
 
-void AB::parcoursTableau(noeud* x, int i){
-	if (x == nullptr){
-		return;
+bool present (int x, int T[], int n){
+	for (int i = 0; i < n; i++){
+		if (T[i] == x){
+			return true;
+		}
 	}
-	Infixe(x->fg);
-	cout << " " << x->cle;
-	Infixe(x->fd);
+	return false;
+}
+
+int AB::min_val_arbre(noeud* x,int min_nbr){
+	if (min_nbr == -1){
+		min_nbr = x->cle;
+	}
+	if (x->fg != NULL){
+		min_nbr = min_val_arbre(x->fg, min_nbr);
+	}
+	if (x->fd != NULL){
+		min_nbr = min_val_arbre(x->fd, min_nbr);
+	}
+	if (x->cle < min_nbr && !present(x->cle, this->T, this->n)){
+		return x->cle;
+	} else {
+		return min_nbr;
+	}
+	return min_nbr;
 }
 
 
@@ -189,5 +209,17 @@ void AB::parcoursTableau(noeud* x, int i){
 /****************************************/
 void AB::ABtoABR(noeud* x)
 {
-    // !!! A FAIRE !!! //
+	add_val_infixe(x);	
+}
+
+void AB::add_val_infixe(noeud* x, int i){
+	if (x != nullptr){
+			add_val_infixe(x->fg);
+			while (T[i] == -1){
+				i++;
+			}
+			x->cle = T[i];
+			T[i] = -1;
+			add_val_infixe(x->fd);
+	}
 }
