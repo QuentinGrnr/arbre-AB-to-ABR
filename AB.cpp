@@ -166,40 +166,50 @@ int AB::Hauteur(noeud* x)
 /* Objectif : Stocker dans T les valeurs 
 /* de l'arbre triées en ordre croissant
 /****************************************/
+
+void AB::parcours(noeud* x){
+	static int i = 0;
+	if (x != nullptr){
+		parcours(x->fg);
+		T[i] = x->cle;
+		i++;
+		parcours(x->fd);
+	}
+}
+
 void AB::Tri(){
 	this->n = this->N(this->r);
-	for (int i = 0; i < this->n; i++){
-		int min_nbr = -1;
-		min_nbr = min_val_arbre(this->r, min_nbr);
-		this->T[i] = min_nbr;	}
+	this->parcours(this->r);
+	this->tri_tableau(0, this->n-1);
 }
 
-bool present (int x, int T[], int n){
-	for (int i = 0; i < n; i++){
-		if (T[i] == x){
-			return true;
+void AB::tri_tableau(int left, int right) {
+	int i = left, j = right;
+	int tmp;
+	int pivot = this->T[(left + right) / 2];
+
+	/* partition */
+	while (i <= j) {
+		while (this->T[i] < pivot)
+			i++;
+		while (this->T[j] > pivot)
+			j--;
+		if (i <= j) {
+			tmp = this->T[i];
+			this->T[i] = this->T[j];
+			this->T[j] = tmp;
+			i++;
+			j--;
 		}
-	}
-	return false;
+	};
+
+	/* recursion */
+	if (left < j)
+		tri_tableau(left, j);
+	if (i < right)
+		tri_tableau(i, right);
 }
 
-int AB::min_val_arbre(noeud* x,int min_nbr){
-	if (min_nbr == -1){
-		min_nbr = x->cle;
-	}
-	if (x->fg != NULL){
-		min_nbr = min_val_arbre(x->fg, min_nbr);
-	}
-	if (x->fd != NULL){
-		min_nbr = min_val_arbre(x->fd, min_nbr);
-	}
-	if (x->cle < min_nbr && !present(x->cle, this->T, this->n)){
-		return x->cle;
-	} else {
-		return min_nbr;
-	}
-	return min_nbr;
-}
 
 
 /****************************************/
